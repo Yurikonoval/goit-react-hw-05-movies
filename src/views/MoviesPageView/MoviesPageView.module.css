@@ -1,0 +1,38 @@
+.gallery {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-left: auto;
+  margin-right: auto;
+}
+.galleryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: calc((100% - 120px) / 4);
+  max-height: 400px;
+  overflow: hidden;
+  margin-top: 15px;
+  box-shadow: 0px 1px 6px -1px rgba(177, 177, 177, 0.7);
+}
+.image {
+  object-fit: contain;
+  width: 100%;
+  max-height: 350px;
+}
+.title {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: 'Poppins', sans-serif;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.link {
+  text-decoration: none;
+}

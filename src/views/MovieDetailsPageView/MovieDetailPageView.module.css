@@ -1,0 +1,43 @@
+.movieCard {
+  display: flex;
+  justify-content: space-between;
+}
+.image {
+  max-height: 350px;
+  margin-left: 10px;
+  margin-right: 30px;
+  box-shadow: 0px 1px 6px -1px rgba(177, 177, 177, 0.7);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+.list {
+  margin-left: 0;
+  justify-content: center;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+.item:first-child {
+  margin-right: 20px;
+}
+
+.link {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px;
+  font-weight: 500;
+  color: #2a363b;
+  font-size: 20px;
+  text-align: center;
+}
+
+.activeLink {
+  composes: link;
+  color: #2196f3;
+}
+.genreName {
+  margin-right: 5px;
+}
