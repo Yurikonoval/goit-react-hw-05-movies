@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation } from 'react-router-dom';
 import LoadMore from '../../components/LoadMore/LoadMore';
 import * as moviesAPI from '../../services/moviesApi';
 import s from './HomePageView.module.css';
@@ -9,6 +9,7 @@ export default function HomePage() {
   const [movies, setMovies] = useState([]);
 
   const { url } = useRouteMatch();
+  const location = useLocation();
 
   useEffect(() => {
     return moviesAPI.fetchMoviesTrending(page).then(({ results }) => {
@@ -39,7 +40,13 @@ export default function HomePage() {
         {movies &&
           movies.map(({ id, title, poster_path }) => (
             <li key={id} className={s.galleryItem}>
-              <Link to={`${url}movies/${id}`} className={s.link}>
+              <Link
+                to={{
+                  pathname: `${url}movies/${id}`,
+                  state: { from: location },
+                }}
+                className={s.link}
+              >
                 <img
                   src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
                   alt={title}

@@ -20,9 +20,7 @@ const MovieDetailsPageView = lazy(() =>
   ),
 );
 const NotFoundView = lazy(() =>
-  import(
-    './views/NotFoundView/NotFoundView' /* webpackChunkName: "not-found"*/
-  ),
+  import('./components/NotFound/NotFound' /* webpackChunkName: "not-found"*/),
 );
 
 export default function App() {

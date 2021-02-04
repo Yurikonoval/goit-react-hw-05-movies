@@ -5,16 +5,20 @@ import {
   useRouteMatch,
   Route,
   Switch,
+  useLocation,
+  useHistory,
 } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import * as moviesAPI from '../../services/moviesApi';
 import s from './MovieDetailPageView.module.css';
 
-const CastView = lazy(() =>
-  import('../CastView/CastView' /* webpackChunkName: "cast-view"*/),
+const Cast = lazy(() =>
+  import('../../components/Cast/Cast' /* webpackChunkName: "cast-view"*/),
 );
-const ReviewsView = lazy(() =>
-  import('../ReviewsView/ReviewsView' /* webpackChunkName: "reviews-view" */),
+const Reviews = lazy(() =>
+  import(
+    '../../components/Reviews/Reviews' /* webpackChunkName: "reviews-view" */
+  ),
 );
 
 export default function MovieDetailPage() {
@@ -22,39 +26,54 @@ export default function MovieDetailPage() {
   const [movie, setMovie] = useState(null);
   const { url, path } = useRouteMatch();
 
+  const location = useLocation();
+  const history = useHistory();
+
   useEffect(() => {
     moviesAPI.fetchMovieDetails(movieId).then(movie => setMovie(movie));
   }, [movieId]);
 
+  const onGoBack = () => {
+    history.push(location?.state?.from ?? '/');
+  };
+
   return (
     <>
       {movie && (
-        <div className={s.movieCard}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-            alt={movie.title}
-            className={s.image}
-          />
-          <div>
-            <p className={s.title}>{movie.title}</p>
-            <div className={s.genres}>
-              <span className={s.text}>Genres: </span>
-              {movie.genres.map(genre => (
-                <span key={genre.id} className={s.genreName}>
-                  {genre.name}
-                </span>
-              ))}
+        <>
+          <button type="button" onClick={onGoBack} className={s.goBackButton}>
+            Go back
+          </button>
+          <div className={s.movieCard}>
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              alt={movie.title}
+              className={s.image}
+            />
+            <div>
+              <p className={s.title}>{movie.title}</p>
+              <div className={s.genres}>
+                <span className={s.text}>Genres: </span>
+                {movie.genres.map(genre => (
+                  <span key={genre.id} className={s.genreName}>
+                    {genre.name}
+                  </span>
+                ))}
+              </div>
+              <p className={s.text}>Rate: {movie.vote_average}</p>
+              <p className={s.text}>Runtime: {movie.runtime} min.</p>
+              <p className={s.text}>{movie.overview}</p>
             </div>
-            <p className={s.text}>Rate: {movie.vote_average}</p>
-            <p className={s.text}>Runtime: {movie.runtime} min.</p>
-            <p className={s.text}>{movie.overview}</p>
           </div>
-        </div>
+        </>
       )}
       <ul className={s.list}>
         <li className={s.item}>
           <NavLink
-            to={`${url}/cast`}
+            to={{
+              pathname: `${url}/cast`,
+              state: { from: location?.state?.from ?? '/' },
+            }}
             className={s.link}
             activeClassName={s.activeLink}
           >
@@ -63,7 +82,10 @@ export default function MovieDetailPage() {
         </li>
         <li className={s.item}>
           <NavLink
-            to={`${url}/reviews`}
+            to={{
+              pathname: `${url}/reviews`,
+              state: { from: location?.state?.from ?? '/' },
+            }}
             className={s.link}
             activeClassName={s.activeLink}
           >
@@ -73,8 +95,8 @@ export default function MovieDetailPage() {
       </ul>
       <Suspense fallback={<Loader />}>
         <Switch>
-          <Route path={`${path}/cast`}>{movie && <CastView />}</Route>
-          <Route path={`${path}/reviews`}>{movie && <ReviewsView />}</Route>
+          <Route path={`${path}/cast`}>{movie && <Cast />}</Route>
+          <Route path={`${path}/reviews`}>{movie && <Reviews />}</Route>
         </Switch>
       </Suspense>
     </>

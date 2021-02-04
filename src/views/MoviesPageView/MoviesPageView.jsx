@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useRef, lazy } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import LoadMore from '../../components/LoadMore/LoadMore';
 import * as moviesAPI from '../../services/moviesApi';
 import noPhoto from '../../images/not-found-image.jpg';
 import s from './MoviesPageView.module.css';
 
-const NotFoundView = lazy(() => import('../NotFoundView/NotFoundView'));
+const NotFoundView = lazy(() => import('../../components/NotFound/NotFound'));
 
 export default function MoviesPage() {
-  const [query, setQuery] = useState(null);
   const [movies, setMovies] = useState([]);
+  const [query, setQuery] = useState(null);
   const [page, setPage] = useState(1);
   const [totalResult, setTotalResult] = useState(0);
 
   const isFirstRender = useRef(true);
   const { url } = useRouteMatch();
+  const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -31,6 +33,15 @@ export default function MoviesPage() {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, page]);
+
+  useEffect(() => {
+    if (location.search === '') {
+      return;
+    }
+
+    const newQuery = new URLSearchParams(location.search).get('query');
+    setQuery(newQuery);
+  }, [location.search]);
 
   const scrollTo = () => {
     if (page !== 1) {
@@ -50,6 +61,7 @@ export default function MoviesPage() {
     setQuery(findQuery);
     setPage(1);
     setMovies([]);
+    history.push({ ...location, search: `query=${findQuery}` });
   };
 
   const onLoadMore = () => {
@@ -64,7 +76,10 @@ export default function MoviesPage() {
           <ul className={s.gallery}>
             {movies.map(({ id, title, poster_path }) => (
               <li key={id} className={s.galleryItem}>
-                <Link to={`${url}/${id}`} className={s.link}>
+                <Link
+                  to={{ pathname: `${url}/${id}`, state: { from: location } }}
+                  className={s.link}
+                >
                   <img
                     src={
                       poster_path

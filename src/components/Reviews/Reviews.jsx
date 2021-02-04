@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import * as moviesAPI from '../../services/moviesApi';
-import s from './ReviewsView.module.css';
+import s from './Reviews.module.css';
 
 export default function CastView() {
   const { movieId } = useParams();

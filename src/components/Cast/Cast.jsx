@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import * as moviesAPI from '../../services/moviesApi';
 import noPhoto from '../../images/not-found-image.jpg';
-import s from './CastView.module.css';
+import s from './Cast.module.css';
 
 export default function CastView() {
   const { movieId } = useParams();
